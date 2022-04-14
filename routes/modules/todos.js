@@ -9,9 +9,10 @@ router.get("/new", (req, res) => {
   return res.render("new");
 });
 router.post("/", (req, res) => {
-  const userId = req.user.id;
   const name = req.body.name;
-  return Todo.create({ name, userId })
+  const UserId = req.user.id;
+
+  return Todo.create({ name, UserId })
     .then(() => res.redirect("/"))
     .catch((error) => console.log(error));
 });

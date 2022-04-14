@@ -17,9 +17,7 @@ router.get("/", (req, res) => {
       .then((todos) => {
         return res.render("index", { todos: todos });
       })
-      .catch((error) => {
-        return res.status(422).json(error);
-      });
+      .catch((error) => console.error(error));
   });
 });
 
