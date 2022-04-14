@@ -4,7 +4,6 @@ const router = express.Router();
 const passport = require("passport");
 
 const db = require("../../models");
-const Todo = db.Todo;
 const User = db.User;
 
 router.get("/login", (req, res) => {
