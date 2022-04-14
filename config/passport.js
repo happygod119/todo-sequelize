@@ -10,28 +10,34 @@ module.exports = (app) => {
   // 初始化 Passport 模組
   app.use(passport.initialize());
   app.use(passport.session());
-
   // 設定本地登入策略
   passport.use(
-    new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-      User.findOne({ where: { email } })
-        .then((user) => {
-          if (!user) {
-            return done(null, false, {
-              message: "That email is not registered!",
-            });
-          }
-          return bcrypt.compare(password, user.password).then((isMatch) => {
-            if (!isMatch) {
-              return done(null, false, {
-                message: "Email or Password incorrect.",
-              });
+    new LocalStrategy(
+      { usernameField: "email", passReqToCallback: true },
+      (req, email, password, done) => {
+        User.findOne({ where: { email } })
+          .then((user) => {
+            if (!user) {
+              return done(
+                null,
+                false,
+                req.flash("loginerr_msg", "這個Email並未註冊!")
+              );
             }
-            return done(null, user);
-          });
-        })
-        .catch((err) => done(err, false));
-    })
+            return bcrypt.compare(password, user.password).then((isMatch) => {
+              if (!isMatch) {
+                return done(
+                  null,
+                  false,
+                  req.flash("loginerr_msg", "Email或密碼錯誤")
+                );
+              }
+              return done(null, user);
+            });
+          })
+          .catch((err) => done(err, false));
+      }
+    )
   );
 
   // 設定序列化與反序列化

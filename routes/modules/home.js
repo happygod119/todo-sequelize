@@ -9,7 +9,6 @@ router.get("/", (req, res) => {
   User.findByPk(req.user.id).then((user) => {
     if (!user) return console.log("user not found");
 
-    //- 查詢多筆資料
     return Todo.findAll({
       raw: true,
       nest: true,
